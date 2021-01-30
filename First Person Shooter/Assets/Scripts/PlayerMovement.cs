@@ -35,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // Aca funciona
         HandleInputs();
         RotateCamera();
 
@@ -162,7 +161,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void UseJump()
     {
-        Debug.Log("Jump");
         fallVelocity = jumpForce;
         moveDirection.y = fallVelocity;
     }
