@@ -62,7 +62,7 @@ public class EnemyCubeHealth : MonoBehaviour
     {
         enemyGun.DropGun();
 
-        Debug.Log($"{gameObject.name} dropped!");
+        //Debug.Log($"{gameObject.name} dropped!");
 
         enemyGun.GetComponentInChildren<MeshCollider>().enabled = true;
 

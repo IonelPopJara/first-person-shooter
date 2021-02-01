@@ -80,8 +80,6 @@ public class CustomBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Triggered {other.name}");
-
         Explode();
     }
 
