@@ -6,8 +6,6 @@ public enum SimpleStateMachine
     Idle,
     Moving,
     Jumping,
-    Falling,
-    Dashing,
     Shooting
 }
 

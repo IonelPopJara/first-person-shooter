@@ -3,9 +3,8 @@
 public class EnemyCubeHealth : MonoBehaviour
 {
     [Header("Enemy Components")]
-    public GameObject gfxRagdoll;
-    public GameObject gfxNormal;
     public Transform gunPosition;
+    public EnemyProjectileGun gun;
 
     [Header("Enemy Stats")]
     public int maxHealth;
@@ -14,22 +13,23 @@ public class EnemyCubeHealth : MonoBehaviour
     public bool isDeath;
     public int currentHealth;
 
-    private Rigidbody rb;
+    public Rigidbody[] childrenRigidbodies;
     private BoxCollider bc;
 
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        bc = GetComponent<BoxCollider>();
+        childrenRigidbodies = GetComponentsInChildren<Rigidbody>();
     }
 
     private void Start()
     {
         isDeath = false;
-        gfxRagdoll.SetActive(false);
 
         currentHealth = maxHealth;
+
+        foreach (var rigidbody in childrenRigidbodies)
+            rigidbody.freezeRotation = true;
     }
 
     private void Update()
@@ -37,29 +37,30 @@ public class EnemyCubeHealth : MonoBehaviour
         if (currentHealth <= 0 && !isDeath)
         {
             isDeath = true;
+            gun.gunDropped = true;
             CubeDeath();
         }
     }
 
-    private void CubeDeath()
+    public void CubeDeath()
     {
         Debug.Log($"{gameObject.name} died!");
 
-        Destroy(rb);
-        Destroy(bc);
+        DropGun();
 
         ActivateRagdoll();
-        DropGun();
     }
 
     private void ActivateRagdoll()
     {
-        gfxRagdoll.SetActive(true);
-        gfxNormal.SetActive(false);
+        foreach (var rigidbody in childrenRigidbodies)
+            rigidbody.freezeRotation = false;
     }
 
     private void DropGun()
     {
+        Debug.Log($"gun dropped!");
+        gunPosition.GetComponentInChildren<MeshCollider>().enabled = true;
         Rigidbody gun = gunPosition.gameObject.AddComponent<Rigidbody>();
         gun.mass = 10;
         gunPosition.parent = null;

@@ -1,72 +1,124 @@
 ﻿using UnityEngine;
+public enum SimpleStateBehaviour
+{
+    Idle,
+    EnemyFound,
+    Shooting
+}
 
 public class EnemyCube : MonoBehaviour
 {
-    //[Header("Enemy Components")]
-    //public GameObject gfxRagdoll;
-    //public GameObject gfxNormal;
-    //public Transform gunPosition;
+    public LayerMask whatIsPlayer;
+    public LayerMask whatCanEnemySee;
+    public Transform playerTarget;
+    private EnemyCubeHealth health;
+    public EnemyProjectileGun gun;
 
-    //[Header("Enemy Stats")]
-    //public int maxHealth;
+    public SimpleStateBehaviour currentState;
 
-    //[Header("Debug")]
-    //public bool isDeath;
-    //public int currentHealth;
+    public float detectionRange = 10f;
+    public float shootingRange = 5f;
+    public float rotSpeed = 15f;
 
-    //private Rigidbody rb;
-    //private BoxCollider bc;
-    
+    public float playerDistance;
 
-    //private void Awake()
-    //{
-    //    rb = GetComponent<Rigidbody>();
-    //    bc = GetComponent<BoxCollider>();
-    //}
+    private void Awake()
+    {
+        health = GetComponent<EnemyCubeHealth>();
+    }
+    private void Update()
+    {
+        if (health.isDeath) return;
 
-    //private void Start()
-    //{
-    //    isDeath = false;
-    //    gfxRagdoll.SetActive(false);
+        SearchForPlayer();
 
-    //    currentHealth = maxHealth;
-    //}
+        switch (currentState)
+        {
+            case SimpleStateBehaviour.Idle:
+                // Do nothing
+                if (playerTarget) currentState = SimpleStateBehaviour.EnemyFound;
+                break;
+            case SimpleStateBehaviour.EnemyFound:
+                // Look at the enemy and see if it can shoot him using a raycast
+                if (!playerTarget) currentState = SimpleStateBehaviour.Idle;
+                LookAtPlayer(playerTarget);
+                if (CanShootPlayer() || playerDistance <= shootingRange) currentState = SimpleStateBehaviour.Shooting;
+                break;
+            case SimpleStateBehaviour.Shooting:
+                LookAtPlayer(playerTarget);
+                if (!CanShootPlayer() && playerDistance > shootingRange)
+                {
+                    gun.shooting = false;
+                    currentState = SimpleStateBehaviour.EnemyFound;
+                }
+                else
+                {
+                    // Use the gun
+                    gun.shooting = true;
+                }
+                break;
+        }
+    }
 
-    //private void Update()
-    //{
-    //    if(currentHealth <= 0 && !isDeath)
-    //    {
-    //        isDeath = true;
-    //        CubeDeath();
-    //    }
-    //}
+    private void SearchForPlayer()
+    {
+        Collider[] player = Physics.OverlapSphere(transform.position, detectionRange, whatIsPlayer);
+        for (int i = 0; i < player.Length; i++)
+        {
+            if (player[i].CompareTag("Player"))
+            {
+                playerTarget = player[i].transform;
+                break;
+            }
+            else
+            {
+                playerTarget = null;
+            }
+        }
 
-    //private void CubeDeath()
-    //{
-    //    Debug.Log($"{gameObject.name} died!");
+        if (playerTarget) playerDistance = (playerTarget.position - transform.position).magnitude;
+    }
 
-    //    Destroy(rb);
-    //    Destroy(bc);
+    private void LookAtPlayer(Transform player)
+    {
+        if (!player) return;
 
-    //    ActivateRagdoll();
-    //    DropGun();
-    //}
+        var lookPos = player.position - transform.position;
+        lookPos.y = 0;
 
-    //private void ActivateRagdoll()
-    //{
-    //    gfxRagdoll.SetActive(true);
-    //    gfxNormal.SetActive(false);
-    //}
+        var targetRotation = Quaternion.LookRotation(lookPos);
 
-    //private void DropGun()
-    //{
-    //    Rigidbody gun = gunPosition.gameObject.AddComponent<Rigidbody>();
-    //    gun.mass = 10;
-    //    gunPosition.parent = null;
-    //}
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+    }
 
-    //public void TakeDamage(int damage)
-    //{
-    //    if (!isDeath) currentHealth -= damage;
-    //}
+    private bool CanShootPlayer()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, detectionRange, whatCanEnemySee))
+        {
+            if (hit.transform.CompareTag("Obstacle"))
+            {
+                Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.red);
+                return false;
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.green);
+                return true;
+            }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.forward * detectionRange, Color.red);
+            return false;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, shootingRange);
+    }
 }

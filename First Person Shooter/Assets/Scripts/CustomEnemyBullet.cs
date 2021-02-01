@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CustomBullet : MonoBehaviour
+public class CustomEnemyBullet : MonoBehaviour
 {
     // assignables
     public Rigidbody rb;
@@ -49,11 +49,15 @@ public class CustomBullet : MonoBehaviour
         for (int i = 0; i < enemies.Length; i++)
         {
             // get component of enemy and call take damage
+            if (enemies[i].GetComponent<PlayerHealth>())
+                enemies[i].GetComponent<PlayerHealth>().TakeDamage(explosionDamage);
+
+            // get component of enemy and call take damage
             if (enemies[i].GetComponent<EnemyCubeHealth>())
                 enemies[i].GetComponent<EnemyCubeHealth>().TakeDamage(explosionDamage);
 
             Debug.Log($"{enemies[i].transform.name} damaged");
-            
+
             if (enemies[i].GetComponent<Rigidbody>())
                 enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, explosionRange);
         }
@@ -72,10 +76,8 @@ public class CustomBullet : MonoBehaviour
         // count up collisions
         collisions++;
 
-        Debug.Log($"{collision.collider.name} collided");
-
         // explode if bullet hits an enemy directly and explodeOnTouch is activated
-        if (collision.collider.CompareTag("Enemy") && explodeOnTouch) Explode();
+        if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Enemy") && explodeOnTouch) Explode();
     }
 
     private void Setup()

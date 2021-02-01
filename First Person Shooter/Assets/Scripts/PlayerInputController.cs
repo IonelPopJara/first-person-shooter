@@ -30,8 +30,8 @@ public class PlayerInputController : MonoBehaviour
         }
 
         bool interactInput = Input.GetKeyDown(KeyCode.F);
-        bool lightAttackInput = Input.GetKeyDown(KeyCode.Mouse0);
-        bool strongAttackInput = Input.GetKeyDown(KeyCode.Mouse1);
+        bool shootInput = Input.GetKeyDown(KeyCode.Mouse0);
+        bool aimInput = Input.GetKeyDown(KeyCode.Mouse1);
         bool dashInput = Input.GetKeyDown(KeyCode.LeftShift);
 
         Current = new PlayerInput()
@@ -40,8 +40,8 @@ public class PlayerInputController : MonoBehaviour
             MoveInput = moveInput,
             MouseInput = mouseInput,
             JumpInput = jumpPressedRemember > 0f,
-            LightAttackInput = lightAttackInput,
-            StrongAttackInput = strongAttackInput,
+            ShootInput = shootInput,
+            AimInput = aimInput,
             InteractInput = interactInput,
             DashInput = dashInput,
         };
@@ -52,8 +52,8 @@ public class PlayerInputController : MonoBehaviour
         public Vector3 MoveInput;
         public Vector2 MouseInput;
         public bool JumpInput;
-        public bool LightAttackInput;
-        public bool StrongAttackInput;
+        public bool ShootInput;
+        public bool AimInput;
         public bool InteractInput;
         public bool DashInput;
     }
