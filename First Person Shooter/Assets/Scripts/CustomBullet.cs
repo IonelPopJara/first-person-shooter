@@ -2,21 +2,23 @@
 
 public class CustomBullet : MonoBehaviour
 {
-    // assignables
+    [Header("Components")]
     public Rigidbody rb;
     public GameObject explosion;
-    public LayerMask whatIsEnemies;
 
-    // stats
+    [Header("Layer Mask")]
+    public LayerMask whatIsDamageable;
+
+    [Header("Bullet Stats")]
     [Range(0f, 1f)] public float bounciness;
     public bool useGravity;
 
-    // damage
+    [Header("Damage")]
     public int explosionDamage;
     public float explosionRange;
     public float explosionForce;
 
-    // lifetime
+    [Header("Life Time")]
     public int maxCollisions;
     public float maxLifetime;
     public bool explodeOnTouch = true;
@@ -45,15 +47,15 @@ public class CustomBullet : MonoBehaviour
         if (explosion != null) Instantiate(explosion, transform.position, Quaternion.identity);
 
         //check for enemies
-        Collider[] enemies = Physics.OverlapSphere(transform.position, explosionRange, whatIsEnemies);
+        Collider[] enemies = Physics.OverlapSphere(transform.position, explosionRange, whatIsDamageable);
         for (int i = 0; i < enemies.Length; i++)
         {
-            // get component of enemy and call take damage
-            if (enemies[i].GetComponent<EnemyCubeHealth>())
-                enemies[i].GetComponent<EnemyCubeHealth>().TakeDamage(explosionDamage);
+            // search for IDamageable
+            var damageable = enemies[i].GetComponentInParent<IDamageable>();
+            if (damageable != null)
+                damageable.TakeDamage(explosionDamage);
 
-            Debug.Log($"{enemies[i].transform.name} damaged");
-            
+            // get component of rigidbody if there is one and apply forces
             if (enemies[i].GetComponent<Rigidbody>())
                 enemies[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, explosionRange);
         }
@@ -72,19 +74,26 @@ public class CustomBullet : MonoBehaviour
         // count up collisions
         collisions++;
 
-        Debug.Log($"{collision.collider.name} collided");
-
-        // explode if bullet hits an enemy directly and explodeOnTouch is activated
+        // explode if bullet hits an enemy || player directly and explodeOnTouch is activated
         if (collision.collider.CompareTag("Enemy") && explodeOnTouch) Explode();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Triggered {other.name}");
+
+        Explode();
     }
 
     private void Setup()
     {
         // create a new physics material
-        physics_mat = new PhysicMaterial();
-        physics_mat.bounciness = bounciness;
-        physics_mat.frictionCombine = PhysicMaterialCombine.Maximum;
-        physics_mat.bounceCombine = PhysicMaterialCombine.Maximum;
+        physics_mat = new PhysicMaterial
+        {
+            bounciness = bounciness,
+            frictionCombine = PhysicMaterialCombine.Maximum,
+            bounceCombine = PhysicMaterialCombine.Maximum
+        };
 
         // assing material to collider
         GetComponent<SphereCollider>().material = physics_mat;

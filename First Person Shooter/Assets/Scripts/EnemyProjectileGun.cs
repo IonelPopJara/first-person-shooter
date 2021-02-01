@@ -16,7 +16,7 @@ public class EnemyProjectileGun : MonoBehaviour
     int bulletsLeft, bulletsShot;
 
     // bools
-    public bool shooting, readyToShoot, reloading;
+    private bool shooting, readyToShoot, reloading;
 
     // reference
     public Transform attackPoint;
@@ -29,7 +29,7 @@ public class EnemyProjectileGun : MonoBehaviour
 
     public Transform mainTransform;
 
-    public bool gunDropped;
+    private bool gunDropped;
 
     private void Awake()
     {
@@ -41,6 +41,7 @@ public class EnemyProjectileGun : MonoBehaviour
     private void Update()
     {
         if (gunDropped) return;
+
         EnemyInput();
     }
 
@@ -117,5 +118,15 @@ public class EnemyProjectileGun : MonoBehaviour
     {
         bulletsLeft = magazineSize;
         reloading = false;
+    }
+
+    public void DropGun()
+    {
+        gunDropped = true;
+    }
+
+    public void SetShooting(bool shootingValue)
+    {
+        shooting = shootingValue;
     }
 }

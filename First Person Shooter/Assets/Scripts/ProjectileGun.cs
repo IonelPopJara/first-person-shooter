@@ -3,13 +3,13 @@ using TMPro;
 
 public class ProjectileGun : MonoBehaviour
 {
-    // bullet
-    public GameObject bullet;
+    [Header("Bullet Prefab")]
+    public GameObject bulletPrefab;
 
-    // bullet force
+    [Header("Bullet Force Settings")]
     public float shootForce, upwardForce;
 
-    // gun stats
+    [Header("Gun Stats")]
     public float timeBetweenShooting, spread, reloadTime, timeBetweenShoots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
@@ -19,15 +19,15 @@ public class ProjectileGun : MonoBehaviour
     // bools
     bool shooting, readyToShoot, reloading;
 
-    // reference
+    [Header("References")]
     public Camera fpsCam;
-    public Transform attackPoint;
+    public Transform firePoint;
 
-    // graphics
+    [Header("Graphics and UI")]
     public GameObject muzzleFlash;
     public TextMeshProUGUI ammunitionDisplay;
 
-    // bug fixing
+    [Header("Debug")]
     public bool allowInvoke = true;
 
     private void Awake()
@@ -49,7 +49,7 @@ public class ProjectileGun : MonoBehaviour
     private void MyInput()
     {
         // check if allowed to hold down button and take corresponding input
-        shooting = allowButtonHold ? Input.GetKey(KeyCode.Mouse0) : Input.GetKeyDown(KeyCode.Mouse0);
+        shooting = allowButtonHold ? PlayerInputController.instance.Current.ShootHoldInput : PlayerInputController.instance.Current.ShootInput;
 
         // reloading
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
@@ -72,17 +72,22 @@ public class ProjectileGun : MonoBehaviour
 
         // find the exact hit position using a raycast
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)); // just a ray through the middle of your screen
-        RaycastHit hit;
 
         //check if ray hits something
         Vector3 targetPoint;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
             targetPoint = hit.point;
+            Debug.DrawLine(firePoint.position, hit.point, Color.magenta);
+        }
         else
+        {
+            Debug.DrawLine(firePoint.position, hit.point, Color.white);
             targetPoint = ray.GetPoint(75); // just a point far away from the player
+        }
 
         // calculate direction from attackPoint to targetPoint
-        Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
+        Vector3 directionWithoutSpread = targetPoint - firePoint.position;
 
         // calculate spread
         float x = Random.Range(-spread, spread);
@@ -92,7 +97,7 @@ public class ProjectileGun : MonoBehaviour
         Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0); // add spread to the last direction
 
         // instantiate bullet/projectile
-        GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
+        GameObject currentBullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         // rotate bullet to shoot direction
         currentBullet.transform.forward = directionWithoutSpread.normalized;
 
@@ -102,7 +107,7 @@ public class ProjectileGun : MonoBehaviour
 
         // instantiate muzzle flash if you have one
         if (muzzleFlash != null)
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+            Instantiate(muzzleFlash, firePoint.position, Quaternion.identity);
         bulletsLeft--;
         bulletsShot++;
 

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class TestScript : MonoBehaviour
+public class TestScript : MonoBehaviour, IDamageable
 {
     public EnemyCubeHealth cubeHealth;
 
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
-        cubeHealth.TakeDamage(1);
+        cubeHealth.TakeDamage(damage);
         Debug.Log($"{gameObject.name} has taken damage");
     }
 }

@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 501574665746002939}
   explosion: {fileID: 0}
-  whatIsEnemies:
+  whatIsDamageable:
     serializedVersion: 2
     m_Bits: 512
   bounciness: 0

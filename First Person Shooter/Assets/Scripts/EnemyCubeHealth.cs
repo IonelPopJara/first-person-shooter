@@ -3,8 +3,7 @@
 public class EnemyCubeHealth : MonoBehaviour
 {
     [Header("Enemy Components")]
-    public Transform gunPosition;
-    public EnemyProjectileGun gun;
+    public EnemyProjectileGun enemyGun;
 
     [Header("Enemy Stats")]
     public int maxHealth;
@@ -14,7 +13,6 @@ public class EnemyCubeHealth : MonoBehaviour
     public int currentHealth;
 
     public Rigidbody[] childrenRigidbodies;
-    private BoxCollider bc;
 
 
     private void Awake()
@@ -32,12 +30,15 @@ public class EnemyCubeHealth : MonoBehaviour
             rigidbody.freezeRotation = true;
     }
 
-    private void Update()
+    public void TakeDamage(int damage)
     {
-        if (currentHealth <= 0 && !isDeath)
+        if (isDeath) return;
+        
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
         {
             isDeath = true;
-            gun.gunDropped = true;
             CubeDeath();
         }
     }
@@ -57,17 +58,17 @@ public class EnemyCubeHealth : MonoBehaviour
             rigidbody.freezeRotation = false;
     }
 
-    private void DropGun()
+    public void DropGun()
     {
-        Debug.Log($"gun dropped!");
-        gunPosition.GetComponentInChildren<MeshCollider>().enabled = true;
-        Rigidbody gun = gunPosition.gameObject.AddComponent<Rigidbody>();
-        gun.mass = 10;
-        gunPosition.parent = null;
-    }
+        enemyGun.DropGun();
 
-    public void TakeDamage(int damage)
-    {
-        if (!isDeath) currentHealth -= damage;
+        Debug.Log($"{gameObject.name} dropped!");
+
+        enemyGun.GetComponentInChildren<MeshCollider>().enabled = true;
+
+        Rigidbody gunRigidbody = enemyGun.gameObject.AddComponent<Rigidbody>();
+        gunRigidbody.mass = 10;
+
+        enemyGun.transform.parent = null;
     }
 }

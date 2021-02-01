@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Obstacle
   - Enemy Bullet
+  - Player Collider
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Player
   - World
   - Enemy Bullet
-  - 
+  - Player Collider
   - 
   - 
   - 

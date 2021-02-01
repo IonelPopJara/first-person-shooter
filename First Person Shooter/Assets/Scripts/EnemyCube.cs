@@ -8,26 +8,40 @@ public enum SimpleStateBehaviour
 
 public class EnemyCube : MonoBehaviour
 {
-    public LayerMask whatIsPlayer;
-    public LayerMask whatCanEnemySee;
-    public Transform playerTarget;
-    private EnemyCubeHealth health;
+    [Header("State Machine")]
+    public SimpleStateBehaviour currentState;
+    
+    [Header("Components")]
     public EnemyProjectileGun gun;
 
-    public SimpleStateBehaviour currentState;
-
+    [Header("Enemy stats")]
     public float detectionRange = 10f;
     public float shootingRange = 5f;
     public float rotSpeed = 15f;
 
+    [Header("Layer Masks")]
+    public LayerMask whatIsPlayer;
+    public LayerMask whatCanEnemySee;
+    
+    [Header("Debug")]
+    public Transform playerTarget;
     public float playerDistance;
+
+    private EnemyCubeHealth health;
 
     private void Awake()
     {
         health = GetComponent<EnemyCubeHealth>();
     }
+
     private void Update()
     {
+        if (health == null)
+        {
+            Debug.Log($"ERROR: No {typeof(EnemyCubeHealth)} provided");
+            return;
+        }
+
         if (health.isDeath) return;
 
         SearchForPlayer();
@@ -48,13 +62,14 @@ public class EnemyCube : MonoBehaviour
                 LookAtPlayer(playerTarget);
                 if (!CanShootPlayer() && playerDistance > shootingRange)
                 {
-                    gun.shooting = false;
+                    // Don't use the gun
+                    gun.SetShooting(false);
                     currentState = SimpleStateBehaviour.EnemyFound;
                 }
                 else
                 {
                     // Use the gun
-                    gun.shooting = true;
+                    gun.SetShooting(true);
                 }
                 break;
         }

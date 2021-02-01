@@ -302,7 +302,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &368373201507565699
 Transform:
   m_ObjectHideFlags: 0
@@ -341,14 +341,10 @@ MonoBehaviour:
   magazineSize: 100
   bulletsPerTap: 1
   allowButtonHold: 1
-  shooting: 0
-  readyToShoot: 0
-  reloading: 0
   attackPoint: {fileID: 2530644411019609611}
   muzzleFlash: {fileID: 0}
   allowInvoke: 1
   mainTransform: {fileID: 2300190032214538953}
-  gunDropped: 0
 --- !u!1001 &156905442611076465
 PrefabInstance:
   m_ObjectHideFlags: 0

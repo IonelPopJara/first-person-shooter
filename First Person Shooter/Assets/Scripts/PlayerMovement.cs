@@ -18,12 +18,10 @@ public class PlayerMovement : MonoBehaviour
     public Transform playerMainCamera;
 
     private CharacterController characterController;
-    private PlayerInputController inputController;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        inputController = GetComponent<PlayerInputController>();
     }
 
     private void Start()
@@ -90,14 +88,15 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 mouseInput;
     public bool isGrounded;
     public bool jumpInput;
-    public bool dashInput;
 
     private void HandleInputs()
     {
-        movementInput = inputController.Current.MoveInputRaw.normalized;
-        mouseInput = inputController.Current.MouseInput;
+        // Use PlayerInputController's Singleton
+        movementInput = PlayerInputController.instance.Current.MoveInputRaw;
 
-        jumpInput = inputController.Current.JumpInput;
+        mouseInput = PlayerInputController.instance.Current.MouseInput;
+
+        jumpInput = PlayerInputController.instance.Current.JumpInput;
 
         isGrounded = GetGroundedStatus();
     }
