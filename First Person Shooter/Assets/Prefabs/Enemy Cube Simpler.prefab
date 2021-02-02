@@ -119,6 +119,8 @@ MonoBehaviour:
   attackPoint: {fileID: 5199092281437181056}
   muzzleFlash: {fileID: 0}
   allowInvoke: 1
+  gunDropped: 0
+  targetPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &2855320462587998323
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,7 +194,7 @@ GameObject:
   - component: {fileID: 7535131747247947585}
   - component: {fileID: 8493275533226741599}
   - component: {fileID: 3089399885147962897}
-  - component: {fileID: 2839029702706938768}
+  - component: {fileID: 6696383607175195127}
   m_Layer: 9
   m_Name: Top Bone
   m_TagString: Enemy
@@ -290,7 +292,7 @@ CharacterJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &2839029702706938768
+--- !u!114 &6696383607175195127
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,7 +301,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6805020790987523502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9101be0dc2f314848b2e01f0a916cc85, type: 3}
+  m_Script: {fileID: 11500000, guid: 56b79e3fa1d7dd643bca8a5ea8cf36a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cubeHealth: {fileID: 2839029703752410251}
@@ -314,7 +316,7 @@ GameObject:
   - component: {fileID: 3120598111605455784}
   - component: {fileID: 5352513006394722504}
   - component: {fileID: 7427771053797518267}
-  - component: {fileID: 2839029703491589309}
+  - component: {fileID: 3109472359491362479}
   m_Layer: 9
   m_Name: Base Bone
   m_TagString: Enemy
@@ -367,7 +369,7 @@ CapsuleCollider:
   m_Height: 0.02
   m_Direction: 1
   m_Center: {x: 0, y: 0.01, z: 0}
---- !u!114 &2839029703491589309
+--- !u!114 &3109472359491362479
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -376,7 +378,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8606744829189408267}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9101be0dc2f314848b2e01f0a916cc85, type: 3}
+  m_Script: {fileID: 11500000, guid: 56b79e3fa1d7dd643bca8a5ea8cf36a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cubeHealth: {fileID: 2839029703752410251}
@@ -440,6 +442,7 @@ MonoBehaviour:
     m_Bits: 6144
   playerTarget: {fileID: 0}
   playerDistance: 0
+  shootPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &2839029703752410251
 MonoBehaviour:
   m_ObjectHideFlags: 0
