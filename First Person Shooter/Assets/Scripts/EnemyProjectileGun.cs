@@ -2,13 +2,13 @@
 
 public class EnemyProjectileGun : MonoBehaviour
 {
-    // bullet
+    [Header("Bullet Prefab")]
     public GameObject bullet;
 
-    // bullet force
+    [Header("Bullet Force Settings")]
     public float shootForce, upwardForce;
 
-    // gun stats
+    [Header("Gun Stats")]
     public float timeBetweenShooting, spread, reloadTime, timeBetweenShoots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
@@ -18,18 +18,16 @@ public class EnemyProjectileGun : MonoBehaviour
     // bools
     private bool shooting, readyToShoot, reloading;
 
-    // reference
+    [Header("References")]
     public Transform attackPoint;
 
-    // graphics
+    [Header("Graphics")]
     public GameObject muzzleFlash;
 
-    // bug fixing
+    [Header("Debug")]
     public bool allowInvoke = true;
-
-    public Transform mainTransform;
-
-    private bool gunDropped;
+    public bool gunDropped;
+    public Vector3 targetPoint;
 
     private void Awake()
     {
@@ -65,8 +63,8 @@ public class EnemyProjectileGun : MonoBehaviour
         readyToShoot = false;
 
         // calculate direction from attackPoint to targetPoint
-        Vector3 directionWithoutSpread = attackPoint.forward;
-
+        //Vector3 directionWithoutSpread = attackPoint.forward;
+        Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
         // calculate spread
         float x = Random.Range(-spread, spread);
         float y = Random.Range(-spread, spread);
@@ -128,5 +126,10 @@ public class EnemyProjectileGun : MonoBehaviour
     public void SetShooting(bool shootingValue)
     {
         shooting = shootingValue;
+    }
+
+    public void SetTargetPoint(Vector3 _targetPoint)
+    {
+        targetPoint = _targetPoint;
     }
 }

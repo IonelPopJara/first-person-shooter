@@ -75,7 +75,7 @@ public class CustomBullet : MonoBehaviour
         collisions++;
 
         // explode if bullet hits an enemy || player directly and explodeOnTouch is activated
-        if (collision.collider.CompareTag("Enemy") && explodeOnTouch) Explode();
+        if (collision.collider.CompareTag("Enemy") || collision.collider.CompareTag("Bullet") && explodeOnTouch) Explode();
     }
 
     private void OnTriggerEnter(Collider other)

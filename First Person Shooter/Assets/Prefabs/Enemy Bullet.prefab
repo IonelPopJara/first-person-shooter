@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4559014093318074989}
   - component: {fileID: 501574665746002939}
   - component: {fileID: 8257143766429218653}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Enemy Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -135,6 +135,6 @@ MonoBehaviour:
   explosionDamage: 1
   explosionRange: 0.5
   explosionForce: 5000
-  maxCollisions: 1
+  maxCollisions: 0
   maxLifetime: 4
   explodeOnTouch: 1

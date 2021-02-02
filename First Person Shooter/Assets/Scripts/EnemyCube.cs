@@ -10,8 +10,9 @@ public class EnemyCube : MonoBehaviour
 {
     [Header("State Machine")]
     public SimpleStateBehaviour currentState;
-    
+
     [Header("Components")]
+    public Transform enemyEyes;
     public EnemyProjectileGun gun;
 
     [Header("Enemy stats")]
@@ -26,6 +27,7 @@ public class EnemyCube : MonoBehaviour
     [Header("Debug")]
     public Transform playerTarget;
     public float playerDistance;
+    public Vector3 shootPoint;
 
     private EnemyCubeHealth health;
 
@@ -45,6 +47,8 @@ public class EnemyCube : MonoBehaviour
         if (health.isDeath) return;
 
         SearchForPlayer();
+
+        gun.SetTargetPoint(shootPoint);
 
         switch (currentState)
         {
@@ -77,17 +81,17 @@ public class EnemyCube : MonoBehaviour
 
     private void SearchForPlayer()
     {
+        //Debug.Log("Search For Player");
+        playerTarget = null;
+
         Collider[] player = Physics.OverlapSphere(transform.position, detectionRange, whatIsPlayer);
         for (int i = 0; i < player.Length; i++)
         {
             if (player[i].CompareTag("Player"))
             {
+                Debug.Log($"{player[i].name}");
                 playerTarget = player[i].transform;
                 break;
-            }
-            else
-            {
-                playerTarget = null;
             }
         }
 
@@ -108,25 +112,52 @@ public class EnemyCube : MonoBehaviour
 
     private bool CanShootPlayer()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, detectionRange, whatCanEnemySee))
+        Ray ray = new Ray(enemyEyes.position, enemyEyes.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, detectionRange, whatCanEnemySee))
         {
             if (hit.transform.CompareTag("Obstacle"))
             {
-                Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.red);
+                Debug.DrawRay(enemyEyes.position, enemyEyes.forward * hit.distance, Color.red);
+                shootPoint = hit.point;
                 return false;
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.green);
+                Debug.DrawRay(enemyEyes.position, enemyEyes.forward * hit.distance, Color.green);
+                shootPoint = hit.point;
                 return true;
             }
         }
         else
         {
-            Debug.DrawRay(transform.position, transform.forward * detectionRange, Color.red);
+            Debug.DrawRay(enemyEyes.position, enemyEyes.forward * detectionRange, Color.red);
+            shootPoint = ray.GetPoint(detectionRange + 20f);
             return false;
         }
+
+        //RaycastHit hit;
+        //if (Physics.Raycast(enemyEyes.position, enemyEyes.forward, out hit, detectionRange, whatCanEnemySee))
+        //{
+        //    if (hit.transform.CompareTag("Obstacle"))
+        //    {
+        //        Debug.DrawRay(enemyEyes.position, enemyEyes.forward * hit.distance, Color.red);
+        //        shootPoint = hit.point;
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        Debug.DrawRay(enemyEyes.position, enemyEyes.forward * hit.distance, Color.green);
+        //        shootPoint = hit.point;
+        //        return true;
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.DrawRay(enemyEyes.position, enemyEyes.forward * detectionRange, Color.red);
+
+        //    return false;
+        //}
     }
 
     private void OnDrawGizmosSelected()
