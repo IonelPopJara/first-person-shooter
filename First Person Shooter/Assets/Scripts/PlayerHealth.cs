@@ -5,6 +5,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Header("Player Life Stats")]
     public int maxHealth;
     public int currentHealth;
+
     public bool isDeath;
 
     private void Start()

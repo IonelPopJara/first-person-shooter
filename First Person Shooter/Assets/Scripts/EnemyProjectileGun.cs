@@ -63,8 +63,8 @@ public class EnemyProjectileGun : MonoBehaviour
         readyToShoot = false;
 
         // calculate direction from attackPoint to targetPoint
-        //Vector3 directionWithoutSpread = attackPoint.forward;
-        Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
+        Vector3 directionWithoutSpread = attackPoint.forward;
+        //Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
         // calculate spread
         float x = Random.Range(-spread, spread);
         float y = Random.Range(-spread, spread);
@@ -121,6 +121,7 @@ public class EnemyProjectileGun : MonoBehaviour
     public void DropGun()
     {
         gunDropped = true;
+        transform.GetComponent<EnemyGunRotation>().IsDropped = true;
     }
 
     public void SetShooting(bool shootingValue)

@@ -14,6 +14,7 @@ public class EnemyCube : MonoBehaviour
     [Header("Components")]
     public Transform enemyEyes;
     public EnemyProjectileGun gun;
+    public EnemyGunRotation gunRotation;
 
     [Header("Enemy stats")]
     public float detectionRange = 10f;
@@ -49,6 +50,8 @@ public class EnemyCube : MonoBehaviour
         SearchForPlayer();
 
         gun.SetTargetPoint(shootPoint);
+
+        gunRotation.PlayerTarget = playerTarget;
 
         switch (currentState)
         {

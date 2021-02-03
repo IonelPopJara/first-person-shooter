@@ -71,6 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7936745746866295304}
   - component: {fileID: 1390318704516398625}
+  - component: {fileID: 54935384301230547}
   m_Layer: 9
   m_Name: Gun Position
   m_TagString: Untagged
@@ -121,6 +122,19 @@ MonoBehaviour:
   allowInvoke: 1
   gunDropped: 0
   targetPoint: {x: 0, y: 0, z: 0}
+--- !u!114 &54935384301230547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2208349181695641440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d41764af02a6c504fa12f62c993a0a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotSpeed: 15
 --- !u!1 &2855320462587998323
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,7 +445,8 @@ MonoBehaviour:
   currentState: 0
   enemyEyes: {fileID: 6095792404013801648}
   gun: {fileID: 1390318704516398625}
-  detectionRange: 15
+  gunRotation: {fileID: 54935384301230547}
+  detectionRange: 25
   shootingRange: 10
   rotSpeed: 10
   whatIsPlayer:

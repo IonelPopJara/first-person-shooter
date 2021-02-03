@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        mainCamera = playerMainCamera.GetComponent<Camera>();
     }
 
     private void Start()
@@ -33,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleInputs();
         RotateCamera();
+        CameraAim();
 
         switch (currentState)
         {
@@ -88,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 mouseInput;
     public bool isGrounded;
     public bool jumpInput;
+    public bool aimInput;
 
     private void HandleInputs()
     {
@@ -97,6 +100,8 @@ public class PlayerMovement : MonoBehaviour
         mouseInput = PlayerInputController.instance.Current.MouseInput;
 
         jumpInput = PlayerInputController.instance.Current.JumpInput;
+
+        aimInput = PlayerInputController.instance.Current.AimInput;
 
         isGrounded = GetGroundedStatus();
     }
@@ -109,6 +114,13 @@ public class PlayerMovement : MonoBehaviour
     public float sensitivity = 100f;
     public float xRotation = 0f;
 
+    public Camera mainCamera;
+
+    public float normalFOV = 60f;
+    public float aimFOV = 20f;
+
+    public float zoomIncrement = 5f;
+
     private void RotateCamera()
     {
         float mouseX = mouseInput.x * sensitivity * Time.deltaTime;
@@ -119,6 +131,18 @@ public class PlayerMovement : MonoBehaviour
 
         playerMainCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    private void CameraAim()
+    {
+        if (aimInput)
+        {
+            mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, aimFOV, zoomIncrement * Time.deltaTime);
+        }
+        else if(!aimInput)
+        {
+            mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, normalFOV, zoomIncrement * Time.deltaTime);
+        }
     }
 
     #endregion

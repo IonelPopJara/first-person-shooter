@@ -44,7 +44,7 @@ public class PlayerInputController : MonoBehaviour
         bool shootInput = Input.GetKeyDown(KeyCode.Mouse0);
         bool shootHoldInput = Input.GetKey(KeyCode.Mouse0);
 
-        bool aimInput = Input.GetKeyDown(KeyCode.Mouse1);
+        bool aimInput = Input.GetKey(KeyCode.Mouse1);
 
         bool dashInput = Input.GetKeyDown(KeyCode.LeftShift);
 

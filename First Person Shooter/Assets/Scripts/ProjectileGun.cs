@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using TMPro;
 
+public enum GunType
+{
+    Player,
+    Enemy
+}
+
 public class ProjectileGun : MonoBehaviour
 {
     [Header("Bullet Prefab")]
